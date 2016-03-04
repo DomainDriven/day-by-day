@@ -1,5 +1,6 @@
 package kr.domaindriven.dailybook;
 
+import kr.domaindriven.dailybook.record.conversion.StringToLocalDateTime;
 import kr.domaindriven.dailybook.record.conversion.StringToWon;
 import kr.domaindriven.dailybook.record.template.dialect.WonDialect;
 import org.springframework.boot.SpringApplication;
@@ -13,11 +14,11 @@ import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 
 /**
  * <p>
- *     애플리케이션 시작점이며 다음 환경 설정을 한눈에 보이게 하기 위해 프로그래밍으로 한다.
- *     <ul>
- *         <li>JPA SQL 보이기</li>
- *         <li>Hibernate ddl 자동 검증</li>
- *     </ul>
+ * 애플리케이션 시작점이며 다음 환경 설정을 한눈에 보이게 하기 위해 프로그래밍으로 한다.
+ * <ul>
+ * <li>JPA SQL 보이기</li>
+ * <li>Hibernate ddl 자동 검증</li>
+ * </ul>
  * </p>
  *
  * @author Younghoe Ahn
@@ -27,17 +28,19 @@ import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 @SpringBootApplication
 public class Application {
 
-    public static void main(String... args){
+    public static void main(String... args) {
         System.setProperty("spring.jpa.show-sql", "true");
         System.setProperty("spring.jpa.hibernate.ddl-auto", "validate");
         ApplicationContext context = SpringApplication.run(Application.class, args);
         //StringToWon 컨버터 등록
         DefaultFormattingConversionService defaultFormattingConversionService = (DefaultFormattingConversionService) context.getBean("mvcConversionService");
         defaultFormattingConversionService.addConverter(new StringToWon());
+        defaultFormattingConversionService.addConverter(new StringToLocalDateTime());
     }
 
     /**
      * <p>Thymeleaf에서 제공하는 {@link Java8TimeDialect} 사용을 위해 등록</p>
+     *
      * @return
      */
     @Bean
@@ -47,6 +50,7 @@ public class Application {
 
     /**
      * <p>{@link kr.domaindriven.dailybook.record.template.dialect.WonDialect} 사용을 위해 등록</p>
+     *
      * @return
      */
     @Bean
@@ -57,10 +61,11 @@ public class Application {
 
     /**
      * <p>기동 여부만 파악하기 위한 페이지</p>
+     *
      * @return
      */
     @RequestMapping("/")
-    public String index(){
+    public String index() {
         return "Hello, World!";
     }
 

@@ -1,26 +1,76 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!--jQuery UI CSS파일-->
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css"/>
+    <!--jQuery 기본 js파일-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <!--jQuery UI 라이브러리 js파일-->
+    <script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/jquery.datetimepicker.css"/>
+    <script src="/jquery.js"></script>
+    <script src="/build/jquery.datetimepicker.full.min.js"></script>
+
+    <script>
+        $(function () {
+            $("#dateWithoutTime").datepicker({
+
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                changeYear: true,
+                nextText: '다음 달',
+                prevText: '이전 달',
+                numberOfMonths: [1, 1]
+            });
+        });
+    </script>
+
+    <script>
+        jQuery('#time').datetimepicker({
+            datepicker: false,
+            format: 'H:i'
+        });
+    </script>
+
+    <!-- 년월일과 시간을 묶기위한 자바스크립트 함수-->
+    <script>
+        function sub() {
+            dateWithoutTime = document.addForm.dateWithoutTime.value;
+            hour = document.addForm.hour.value;
+            minute = document.addForm.minute.value;
+            date = dateWithoutTime + "-" + hour + ":" + minute;
+            document.addForm.date.value = date;
+        }
+    </script>
+
     <title th:text="#{view.add}"></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
+
 <body>
 <h1 th:text="#{view.add}"></h1>
 
-<form action="#" th:action="@{/dailybook/add}" th:object="${record}" method="post">
+<form action="#" name="addForm" th:action="@{/dailybook/add}" th:object="${record}" method="post" onSubmit="">
     <p>Date:
-        <button type="submit" name="setDateAsNow" th:text="현재시각"></button>
-        <span th:if="${record.date}" th:text="${#temporals.format(record.date, 'yyyy.MM.dd hh:mm:ss')}" />
-        <br/>
-        혹은<input type="text" th:field="*{date}" />
-            (둘 중 하나를 선택하게 UI 수정)
+        <input type="text" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" name="dateWithoutTime"
+               id="dateWithoutTime"/>
+        <select name="hour" id="hour">
+            <option th:each="i : ${#numbers.sequence(0, 23)}" th:value="${i}" th:text="${i}" th:selected="${0} ">
+                Options
+            </option>
+        </select>시
+        <select name="minute" id="minute">
+            <option th:each="i : ${#numbers.sequence(0, 59)}" th:value="${i}" th:text="${i}" th:selected="${0} ">
+                Options
+            </option>
+        </select>분
+        <input type="hidden" th:field="*{date}"/>
     </p>
-    <!--<p>RevenueOrExpense: <input type="text" th:field="*{revenueOrExpense}" /></p>-->
-    <p>amount: <input type="text" th:field="*{amount}" /></p>
-    <!--<p>balance: <input type="text" th:field="*{balance}" /></p>-->
-    <p>summary: <input type="text" th:field="*{summary}" /></p>
-    <p>category: <input type="text" th:field="*{category}" /></p>
-    <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+    <p>amount: <input type="text" onfocus="this.value='';" value="금액을 입력해주세요." name="amount" id="amount"/></p>
+    <p>summary: <input type="text" onfocus="this.value='';" value="적요를 입력해주세요." name="summary" id="summary"/></p>
+    <p>category: <input type="text" th:field="*{category}"/></p>
+    <p><input type="submit" value="Submit" OnClick="return sub()"/> <input type="reset" value="Reset"/></p>
 </form>
 </body>
 </html>

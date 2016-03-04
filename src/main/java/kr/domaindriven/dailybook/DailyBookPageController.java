@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * <p>
- *     후원금 관리 화면 입출력 서버측 접점
+ * 후원금 관리 화면 입출력 서버측 접점
  * </p>
  *
  * @author Younghoe Ahn
@@ -33,7 +33,6 @@ public class DailyBookPageController {
     private RecordRepository recordRepository;
 
 
-
     /**
      * <p>후원금 관리 목록에 한 줄에 해당하는 데이터를 입력하는 화면 출력</p>
      *
@@ -44,7 +43,6 @@ public class DailyBookPageController {
     public String addRecord(Model model) {
         // command 객체
         Record record = new Record();
-        record.setDate(LocalDateTime.now());
         record.setAmount(new Won(0));
         record.setCategory(RecordCategory.후원금);
         model.addAttribute("record", record);
@@ -58,36 +56,36 @@ public class DailyBookPageController {
      * @param model
      * @return
      */
-    @RequestMapping(value = APP_DIR + "add", method=RequestMethod.POST)
+    @RequestMapping(value = APP_DIR + "add", method = RequestMethod.POST)
     public String recordAdded(@ModelAttribute Record record, Model model) {
 
 
         // TODO convert hard-cord check to @VALID
 
         //날짜를 위한 추가부분
-        if(record.getDate() == null) {
+        if (record.getDate() == null) {
             model.addAttribute("record", record);
             return APP_DIR + "add";
-        }else {
+        } else {
             record.setDate(record.getDate());
         }
 
         //금액을 위한 추가부분, 음수면 지출 그외에는 수입
-        if(record.getAmount() == null){
+        if (record.getAmount() == null) {
             model.addAttribute("record", record);
             return APP_DIR + "add";
-        }else if(record.getAmount().toBigDecimal().compareTo(new BigDecimal(0)) == -1){
+        } else if (record.getAmount().toBigDecimal().compareTo(new BigDecimal(0)) == -1) {
             record.setRevenueOrExpense(RecordType.지출);
-        }else {
+        } else {
             record.setRevenueOrExpense(RecordType.수입);
         }
         //범주(카테고리)를 위한 부분
-        if(record.getCategory() == null){
+        if (record.getCategory() == null) {
             model.addAttribute("record", record);
             return APP_DIR + "add";
-        }else if(record.getCategory().equals(RecordCategory.위키유지비)){
+        } else if (record.getCategory().equals(RecordCategory.위키유지비)) {
             record.setCategory(RecordCategory.위키유지비);
-        }else{
+        } else {
             record.setCategory(RecordCategory.후원금);
         }
 
@@ -98,10 +96,10 @@ public class DailyBookPageController {
         record.setBalance(balance);
 
         //적요(Summary)를 위한 부분
-        if(record.getSummary() == null){
+        if (record.getSummary() == null) {
             model.addAttribute("record", record);
             return APP_DIR + "add";
-        }else{
+        } else {
             record.setSummary(record.getSummary());
         }
 
@@ -120,11 +118,12 @@ public class DailyBookPageController {
 
     /**
      * <p>후원금 관리 첫 화면 즉, 목록이 나오는 화면 출력</p>
+     *
      * @param model
      * @return
      */
     @RequestMapping(value = APP_DIR + "list", method = RequestMethod.GET)
-    public String list(Model model){
+    public String list(Model model) {
         List<Record> recordList = recordRepository.findAll();
         model.addAttribute("list", recordList);
         return APP_DIR + "list";
@@ -133,17 +132,17 @@ public class DailyBookPageController {
     // TODO 향후 구현 완료 후에 javadoc 주석 보강
 
     @RequestMapping(value = "dailybook/update/{id}", method = RequestMethod.GET)
-    public String update(@PathVariable Long id,Model model){
+    public String update(@PathVariable Long id, Model model) {
         Record oldRecord = recordRepository.findById(id);
-        model.addAttribute("oldRecord",oldRecord);
+        model.addAttribute("oldRecord", oldRecord);
         System.out.println(oldRecord);
         return APP_DIR + "update";
     }
 
     @RequestMapping(value = "dailybook/update/{id}", method = RequestMethod.POST)
-    public String update(@PathVariable Long id,@ModelAttribute Record record,Model model){
+    public String update(@PathVariable Long id, @ModelAttribute Record record, Model model) {
         recordRepository.save(record);
         System.out.println(record);
-        return APP_DIR +"result";
+        return APP_DIR + "result";
     }
 }

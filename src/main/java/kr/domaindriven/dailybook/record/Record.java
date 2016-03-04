@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- *      후원금 관리 기준이 되는 입출금 이력과 그에 따른 잔액을 표현하는 객체이며 JPA {@link Entity} 역할을 겸함
+ * 후원금 관리 기준이 되는 입출금 이력과 그에 따른 잔액을 표현하는 객체이며 JPA {@link Entity} 역할을 겸함
  * </p>
  *
  * @author Younghoe Ahn
@@ -16,7 +16,8 @@ import java.time.LocalDateTime;
 @Entity
 public class Record {
 
-    @Id    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     private LocalDateTime date;
@@ -42,7 +43,9 @@ public class Record {
         this.date = date;
     }
 
-    public void setRevenueOrExpense(RecordType revenueOrExpense) { this.revenueOrExpense = revenueOrExpense; }
+    public void setRevenueOrExpense(RecordType revenueOrExpense) {
+        this.revenueOrExpense = revenueOrExpense;
+    }
 
     public void setAmount(Won amount) {
         this.amount = amount;
@@ -62,9 +65,9 @@ public class Record {
 
     public Record(LocalDateTime date, boolean isRevenue, Won amount, Won balance, String summary, RecordCategory category) {
         this.date = date;
-        if(isRevenue){
+        if (isRevenue) {
             revenueOrExpense = RecordType.수입;
-        }else {
+        } else {
 
             revenueOrExpense = RecordType.지출;
         }
@@ -79,7 +82,9 @@ public class Record {
     }
 
 
-    public long getId() {return id;}
+    public long getId() {
+        return id;
+    }
 
     public LocalDateTime getDate() {
         return date;

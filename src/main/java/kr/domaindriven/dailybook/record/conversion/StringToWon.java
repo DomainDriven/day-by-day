@@ -13,11 +13,11 @@ import java.math.BigDecimal;
  *
  * @author Jerry Ahn
  */
-public class StringToWon implements Converter<String,Won> {
+public class StringToWon implements Converter<String, Won> {
     @Override
     public Won convert(String source) {
-        String cha = source.replaceAll("[^-]","");
-        String num = source.replaceAll( "[^0-9]", "");
+        String cha = source.replaceAll("[^-]", "");
+        String num = source.replaceAll("[^0-9]", "");
         BigDecimal amonut = new BigDecimal(num);
         return new Won(amonut);
     }

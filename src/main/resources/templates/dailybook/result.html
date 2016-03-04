@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Result</h1>
-<p th:text="'data: ' + ${record.date}" />
+<p th:text="'data: ' + ${#temporals.format(record.date, 'yyyy.MM.dd')}" />
 <p th:text="'revenueOrExpense: ' + ${record.revenueOrExpense}" />
 <p th:text="'amount: ' + ${#wonDialect.getWon(record.getAmount())}" />
 <p th:text="'balance: ' + ${#wonDialect.getWon(record.getAmount())}" />
